@@ -3,7 +3,7 @@
 pip intsall uv
 
 uv init EmployeeLeave-MCP-Server
-cd EmployeeLeave-MCP-Server
+cd EmpLeaveMgmt-Claude-MCP-Server
 
 python -m venv .venv
 .venv\Scripts\activate
