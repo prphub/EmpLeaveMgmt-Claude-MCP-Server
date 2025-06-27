@@ -3,10 +3,13 @@ from typing import List
 from mcp.server.fastmcp import FastMCP
 from pathlib import Path
 
-CSV_PATH = Path(__file__).parent / "employee_leaves.csv"
+
+
+# CSV path constant
+CSV_PATH = Path(__file__).parent / "data/employee_leaves.csv"
 print("Resolved CSV path:", CSV_PATH.resolve())
 
-
+# Load employee leave data from CSV
 def load_employee_leaves():
     """Load the employee leaves from CSV"""
     employee_data = {}
@@ -26,6 +29,7 @@ def load_employee_leaves():
                 print(f"⚠️ Error loading row for {emp_id}: {e}")
     return employee_data
 
+# Save employee leave data to CSV
 def save_employee_leaves(data):
     """Save the updated employee leaves to CSV"""
     with CSV_PATH.open(mode='w', newline='') as file:
@@ -40,9 +44,14 @@ def save_employee_leaves(data):
                 'history': history_str
             })
 
-# Create MCP server
+
+
+# Initialize the MCP server
 mcp = FastMCP("LeaveManager")
 
+
+
+# Tool: Check Leave Balance
 @mcp.tool()
 def get_leave_balance(employee_id: str) -> str:
     """Check how many leave days are left for the employee"""
@@ -52,6 +61,7 @@ def get_leave_balance(employee_id: str) -> str:
         return f"{employee_id} has {data['balance']} leave days remaining."
     return "Employee ID not found."
 
+# Tool: Apply for Leave
 @mcp.tool()
 def apply_leave(employee_id: str, leave_dates: List[str]) -> str:
     """
@@ -76,6 +86,7 @@ def apply_leave(employee_id: str, leave_dates: List[str]) -> str:
 
     return f"Leave applied for {requested_days} day(s). Remaining balance: {employee_leaves[employee_id]['balance']}."
 
+# Tool: Get Leave History
 @mcp.tool()
 def get_leave_history(employee_id: str) -> str:
     """Get leave history for the employee"""
@@ -86,10 +97,14 @@ def get_leave_history(employee_id: str) -> str:
         return f"Leave history for {employee_id}: {history}"
     return "Employee ID not found."
 
+# Resource: Greeting
 @mcp.resource("greeting://{name}")
 def get_greeting(name: str) -> str:
     """Personalized greeting"""
     return f"Hello, {name}! How can I assist you with leave management today?"
 
+
+
+# Run the MCP server
 if __name__ == "__main__":
     mcp.run()
